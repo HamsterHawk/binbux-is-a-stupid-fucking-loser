@@ -1,0 +1,76 @@
+// ==UserScript==
+// @name         hide rinlux's (a dumb stupid loser retard who needs to kill himself has an annoying voice and) polls
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Sets .poll-frame margin to -400px on destiny.gg
+// @author       You
+// @match        https://www.destiny.gg/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Add names to hide here
+    const namesToHide = [
+        'RiN_LuX',
+        // 'Name2',
+        // 'Name3',
+        // 'Name4',
+        // 'Name5',
+        // 'Name6',
+        // 'Name7',
+        // 'Name8',
+        // 'Name9',
+        // 'Name10',
+    ];
+
+    const hiddenPolls = new Map(); // Track which polls we've hidden
+
+    function applyMargin() {
+        const pollFrames = document.querySelectorAll('.poll-frame');
+        pollFrames.forEach(frame => {
+            const pollInfo = frame.querySelector('.poll-info');
+            const chatPollFrame = document.getElementById('chat-poll-frame');
+
+            if (pollInfo && chatPollFrame) {
+                const shouldHide = namesToHide.some(name =>
+                    pollInfo.textContent.includes(name)
+                );
+                const isActive = chatPollFrame.classList.contains('active');
+
+                if (shouldHide && isActive && !hiddenPolls.has(frame)) {
+                    frame.style.setProperty('margin', '-400px', 'important');
+                    hiddenPolls.set(frame, true);
+
+                    // Watch for class change to "poll-completed" only
+                    const pollObserver = new MutationObserver(() => {
+                        if (chatPollFrame.classList.contains('poll-completed') &&
+                            !chatPollFrame.classList.contains('active')) {
+                            setTimeout(() => {
+                                frame.style.setProperty('margin', '4px', 'important');
+                                hiddenPolls.delete(frame);
+                                pollObserver.disconnect();
+                            }, 300);
+                        }
+                    });
+
+                    pollObserver.observe(chatPollFrame, {
+                        attributes: true,
+                        attributeFilter: ['class']
+                    });
+                }
+            }
+        });
+    }
+
+    // Apply immediately
+    applyMargin();
+
+    // Watch for dynamically added poll frames
+    const observer = new MutationObserver(applyMargin);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+})();
