@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         hide rinlux's (a dumb stupid loser retard who needs to kill himself has an annoying voice and) polls
+// @name         hide 🅱️in🅱️ux's (a dumb stupid loser retard who needs to kill himself has an annoying voice and) polls
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Sets .poll-frame margin to -400px on destiny.gg
@@ -13,7 +13,7 @@
 
     // Add names to hide here
     const namesToHide = [
-        'RiN_LuX',
+        '🅱️iN_🅱️uX',
         // 'Name2',
         // 'Name3',
         // 'Name4',
